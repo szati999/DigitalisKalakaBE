@@ -1,8 +1,8 @@
 import * as admin from 'firebase-admin';
 
 export enum CollectionType {
-    MENTOR = "mentor",
-    STUDENT = "student"
+    MENTOR = "mentors",
+    STUDENT = "students"
 }
 
 export async function register(payload: any, type: CollectionType){
