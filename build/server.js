@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const admin = __importStar(require("firebase-admin"));
 const register_mentor_1 = require("./controllers/register_mentor");
+const getAllStudents_1 = require("./controllers/getAllStudents");
 const serviceAccount = require("../serviceAccountKeys.json");
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -68,6 +69,15 @@ app.post("/register_student", bodyParser.json(), (req, res) => __awaiter(void 0,
     }
     catch (err) {
         res.status(500).json({ message: "An error occurred in student registered" });
+    }
+}));
+app.get("/getAllStudents", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, getAllStudents_1.getAllStudents)();
+        res.status(200).json(students);
+    }
+    catch (err) {
+        res.status(500).json({ message: "An error occurred while getting all students" });
     }
 }));
 app.listen(PORT, () => {
