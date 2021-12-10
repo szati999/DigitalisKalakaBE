@@ -35,6 +35,7 @@ const express_1 = __importDefault(require("express"));
 const admin = __importStar(require("firebase-admin"));
 const register_mentor_1 = require("./controllers/register_mentor");
 const getAllStudents_1 = require("./controllers/getAllStudents");
+const getStudentsBySubject_1 = require("./controllers/getStudentsBySubject");
 const serviceAccount = require("../serviceAccountKeys.json");
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -78,6 +79,15 @@ app.get("/getAllStudents", (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     catch (err) {
         res.status(500).json({ message: "An error occurred while getting all students" });
+    }
+}));
+app.get("/getStudents/:subject", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield (0, getStudentsBySubject_1.getStudentsBySubject)(req.params.subject);
+        res.status(200).json(students);
+    }
+    catch (err) {
+        res.status(500).json({ message: "An error occurred while getting students" });
     }
 }));
 app.listen(PORT, () => {
