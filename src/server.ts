@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
-    admin.firestore().collection("mivan").add({message: "faszagyerek"});
+    // admin.firestore().collection("mivan").add({message: "faszagyerek"});
 })
 
 app.listen(PORT, () => {
