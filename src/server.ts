@@ -2,7 +2,7 @@ import express from 'express'
 import * as admin from 'firebase-admin';
 import { register, CollectionType} from './controllers/register_mentor';
 import { getAllStudents, getMentorStudents, getPending } from './controllers/Students';
-import { getStudentsBySubject } from './controllers/getStudentsBySubject';
+import { getBySubject } from './controllers/getStudentsBySubject';
 import { assignStudent } from './controllers/assignStudent';
 
 const serviceAccount = require("../serviceAccountKeys.json");
@@ -61,10 +61,19 @@ app.get("/getAllStudents", async (req, res) => {
 
 app.get("/getStudents/:subject", async (req, res) => {
     try {
-        const students = await getStudentsBySubject(req.params.subject);
+        const students = await getBySubject(req.params.subject, CollectionType.STUDENT);
         res.status(200).json(students);
     }catch(err) {
         res.status(500).json({message: "An error occurred while getting students"});
+    }
+})
+
+app.get("/getMentors/:subject", async (req, res) => {
+    try {
+        const mentors = await getBySubject(req.params.subject, CollectionType.MENTOR);
+        res.status(200).json(mentors);
+    }catch(err) {
+        res.status(500).json({message: "An error occurred while getting mentors"});
     }
 })
 
