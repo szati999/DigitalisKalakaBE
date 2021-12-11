@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { register, CollectionType} from './controllers/register_mentor';
 import { getAllStudents } from './controllers/getAllStudents';
 import { getStudentsBySubject } from './controllers/getStudentsBySubject';
+import { assignStudent } from './controllers/assignStudent';
 
 const serviceAccount = require("../serviceAccountKeys.json");
 const bodyParser = require('body-parser')
@@ -15,6 +16,7 @@ admin.initializeApp({
     databaseURL: 'https://digitalis-kalaka.firebaseio.com'
 });
 app.use(cors());
+app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -69,7 +71,9 @@ app.get("/getStudents/:subject", async (req, res) => {
 
 app.post("assignStudentToMentor", bodyParser.json(), async (req, res) => {
     try {
-
+        const payload = req.body;
+        await assignStudent(payload);
+        res.status(200).json({message: "Student assigned successfully!"});
     }catch(err) {
         res.status(500).json({message: "An error occurred while assigning student to Mentor"});
     }
