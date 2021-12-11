@@ -1,7 +1,7 @@
 import express from 'express'
 import * as admin from 'firebase-admin';
 import { register, CollectionType} from './controllers/register_mentor';
-import { getAllStudents, getPending } from './controllers/getAllStudents';
+import { getAllStudents, getMentorStudents, getPending } from './controllers/Students';
 import { getStudentsBySubject } from './controllers/getStudentsBySubject';
 import { assignStudent } from './controllers/assignStudent';
 
@@ -91,6 +91,16 @@ app.get("/getPendingStudents", async (req, res) => {
     try {
         const pendingStudents = await getPending(CollectionType.STUDENT);
         res.status(200).json(pendingStudents);
+    }catch(err) {
+        res.status(500).json({message: "An error occurred while getting the pending Students"});
+    }
+})
+
+app.get("/:mentorId/getStudents", async (req, res) => {
+    try{
+        const mentorId = req.params.mentorId;
+        const students = await getMentorStudents(mentorId);
+        res.status(200).json(students);
     }catch(err) {
         res.status(500).json({message: "An error occurred while getting the pending Students"});
     }
