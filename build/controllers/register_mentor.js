@@ -32,8 +32,8 @@ exports.register = exports.CollectionType = void 0;
 const admin = __importStar(require("firebase-admin"));
 var CollectionType;
 (function (CollectionType) {
-    CollectionType["MENTOR"] = "mentor";
-    CollectionType["STUDENT"] = "student";
+    CollectionType["MENTOR"] = "mentors";
+    CollectionType["STUDENT"] = "students";
 })(CollectionType = exports.CollectionType || (exports.CollectionType = {}));
 function register(payload, type) {
     return __awaiter(this, void 0, void 0, function* () {

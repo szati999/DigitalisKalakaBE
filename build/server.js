@@ -38,15 +38,15 @@ const getAllStudents_1 = require("./controllers/getAllStudents");
 const getStudentsBySubject_1 = require("./controllers/getStudentsBySubject");
 const serviceAccount = require("../serviceAccountKeys.json");
 const bodyParser = require('body-parser');
-const cors = require('cors');
+var cors = require('cors');
 const app = (0, express_1.default)();
 const PORT = 3000;
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://digitalis-kalaka.firebaseio.com'
 });
-app.use(express_1.default.json());
 app.use(cors());
+app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
     res.send("Hello World!");

@@ -6,7 +6,7 @@ import { getStudentsBySubject } from './controllers/getStudentsBySubject';
 
 const serviceAccount = require("../serviceAccountKeys.json");
 const bodyParser = require('body-parser')
-const cors = require('cors');
+var cors = require('cors');
 const app = express();
 const PORT = 3000;
 
@@ -17,6 +17,12 @@ admin.initializeApp({
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -58,6 +64,14 @@ app.get("/getStudents/:subject", async (req, res) => {
         res.status(200).json(students);
     }catch(err) {
         res.status(500).json({message: "An error occurred while getting students"});
+    }
+})
+
+app.post("assignStudentToMentor", bodyParser.json(), async (req, res) => {
+    try {
+
+    }catch(err) {
+        res.status(500).json({message: "An error occurred while assigning student to Mentor"});
     }
 })
 
