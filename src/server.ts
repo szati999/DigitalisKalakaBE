@@ -1,7 +1,7 @@
 import express from 'express'
 import * as admin from 'firebase-admin';
 import { register, CollectionType} from './controllers/register_mentor';
-import { getAllStudents } from './controllers/getAllStudents';
+import { getAllStudents, getPending } from './controllers/getAllStudents';
 import { getStudentsBySubject } from './controllers/getStudentsBySubject';
 import { assignStudent } from './controllers/assignStudent';
 
@@ -16,15 +16,14 @@ admin.initializeApp({
     databaseURL: 'https://digitalis-kalaka.firebaseio.com'
 });
 app.use(cors());
-app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+//   });
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -34,8 +33,8 @@ app.get("/", (req, res) => {
 app.post("/register_mentor", bodyParser.json(), async (req, res) => {
     try {
         const payload = req.body;
-        await register(payload, CollectionType.MENTOR);
-        res.status(200).json({message: "Mentor registered successfully!"});
+        const id = await register(payload, CollectionType.MENTOR);
+        res.status(200).json(id);
     } catch(err) {
         res.status(500).json({message: "An error occurred in mentro registered"});
     }
@@ -44,8 +43,8 @@ app.post("/register_mentor", bodyParser.json(), async (req, res) => {
 app.post("/register_student", bodyParser.json(), async (req, res) => {
     try {
         const payload = req.body;
-        await register(payload, CollectionType.STUDENT);
-        res.status(200).json({message: "Student registered successfully!"});
+        const id = await register(payload, CollectionType.STUDENT);
+        res.status(200).json(id);
     } catch(err) {
         res.status(500).json({message: "An error occurred in student registered"});
     }
@@ -69,7 +68,7 @@ app.get("/getStudents/:subject", async (req, res) => {
     }
 })
 
-app.post("assignStudentToMentor", bodyParser.json(), async (req, res) => {
+app.post("/assignStudentToMentor", bodyParser.json(), async (req, res) => {
     try {
         const payload = req.body;
         await assignStudent(payload);
@@ -79,6 +78,24 @@ app.post("assignStudentToMentor", bodyParser.json(), async (req, res) => {
     }
 })
 
+app.get("/getPendingMentors", async (req, res) => {
+    try {
+        const pendingMentors = await getPending(CollectionType.MENTOR);
+        res.status(200).json(pendingMentors);
+    }catch(err) {
+        res.status(500).json({message: "An error occurred while getting the pending Mentors"});
+    }
+})
+
+app.get("/getPendingStudents", async (req, res) => {
+    try {
+        const pendingStudents = await getPending(CollectionType.STUDENT);
+        res.status(200).json(pendingStudents);
+    }catch(err) {
+        res.status(500).json({message: "An error occurred while getting the pending Students"});
+    }
+})
+
 app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`)
+    console.log(`Server is listening on port ${PORT}`);
 })

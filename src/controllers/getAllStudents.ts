@@ -11,3 +11,15 @@ export async function getAllStudents() {
     }
     return students;
 }
+
+export async function getPending(type: CollectionType){
+    const snapshot = await admin.firestore().collection(type)
+        .where('pending','==',true).get();
+
+    let people: Array<any> = [];
+    for (let doc of snapshot.docs) {
+        const data = doc.data();
+        people.push(data);
+    }
+    return people;
+}

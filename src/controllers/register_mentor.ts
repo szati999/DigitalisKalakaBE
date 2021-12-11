@@ -8,4 +8,5 @@ export enum CollectionType {
 export async function register(payload: any, type: CollectionType){
     const docRef = await admin.firestore().collection(type).add({...payload});
     await docRef.update({id: docRef.id});
+    return docRef.id;
 }
