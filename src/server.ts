@@ -86,9 +86,10 @@ app.get("/getMentors/:subject", async (req, res) => {
 app.post("/assignStudentToMentor", bodyParser.json(), async (req, res) => {
     try {
         const payload = req.body;
-        await assignStudent(payload);
-        res.status(200).json({message: "Student assigned successfully!"});
+        const studentIds = await assignStudent(payload);
+        res.status(200).json(studentIds);
     }catch(err) {
+        console.log(err);
         res.status(500).json({message: "An error occurred while assigning student to Mentor"});
     }
 })
